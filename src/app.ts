@@ -39,9 +39,6 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/search", searchRoutes);
 
-app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
-});
 
 // 404 handler
 app.use((req: Request, res: Response) => {
