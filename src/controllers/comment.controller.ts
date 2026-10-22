@@ -27,7 +27,7 @@ export const listVideoComments = async (req: Request, res: Response) => {
       limit,
       offset,
     }),
-    await Comment.count({ where: {} }),
+    await Comment.count({ where: {videoId: video.id} }),
   ]);
 
   res.status(200).json({

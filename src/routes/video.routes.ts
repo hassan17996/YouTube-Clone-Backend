@@ -90,6 +90,8 @@ router.delete("/:id",
     deleteVideo
 );
 
+
+
 // =============================Comments Routes==================
 const videoIdRule = param("videoId").isInt({ min: 1 });
 
@@ -114,6 +116,8 @@ router.post("/:videoId/comments",
     validate,
     createComment
 );
+
+
 
 // =============================Reactions Routes==================
 

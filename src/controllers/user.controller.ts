@@ -82,8 +82,8 @@ export const deleteAccount = async (req: Request, res: Response) => {
   const user = await User.findByPk(req.user!.id);
   if (!user) throw new HttpError(404, "User not found");
 
-  if (!bcrypt.compare(password, user.password)) {
-    throw new HttpError(401, "Incorrect password");
+  if (!(await bcrypt.compare(password, user.password))) {
+    throw new HttpError(401, "Incorrect password");         
   }
 
   const avatarPath = user.profilePicture;
