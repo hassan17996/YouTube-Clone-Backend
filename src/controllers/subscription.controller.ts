@@ -63,14 +63,14 @@ export const listSubscriptions = async (req: Request, res: Response) => {
   const { page, limit, offset } = getPaging(req);
 
   const [subscriptions, total] = await Promise.all([
-    await Subscription.findAll({
+    Subscription.findAll({
         where: {subscriberId: req.user!.id},
         order: [["createdAt", "DESC"]],
         include: [{model: User, as: "channel", attributes: ["username", "bio"]}],
         limit,
         offset,
     }),
-    await Subscription.count({where: {subscriberId: req.user!.id}})
+    Subscription.count({where: {subscriberId: req.user!.id}})
   ]);
 
   res.status(200).json({ subscriptions, page, limit, total, totalPages: Math.ceil(total / limit)});

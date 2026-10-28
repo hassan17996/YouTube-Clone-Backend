@@ -80,7 +80,7 @@ export const updateComment = async (req: Request, res: Response) => {
   if (req.user?.id !== comment.userId)
     throw new HttpError(403, "You can only edit your own comments");
 
-  comment.update({ content: req.body.content });
+  await comment.update({ content: req.body.content });
   res.status(200).json({ message: "updated successfully", comment });
 };
 

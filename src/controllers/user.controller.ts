@@ -83,23 +83,25 @@ export const deleteAccount = async (req: Request, res: Response) => {
   if (!user) throw new HttpError(404, "User not found");
 
   if (!(await bcrypt.compare(password, user.password))) {
-    throw new HttpError(401, "Incorrect password");         
+    throw new HttpError(401, "Incorrect password");
   }
 
   const avatarPath = user.profilePicture;
   const videos = await Video.findAll({
-    where: {userId: user.id},
-    attributes: ["videoUrl", "thumbnailUrl"]
-  })
+    where: { userId: user.id },
+    attributes: ["videoUrl", "thumbnailUrl"],
+  });
 
   await sequelize.transaction((t) => user.destroy({ transaction: t }));
   await Promise.all([
-    await removeUpload(avatarPath),
-    videos.map(async(video)=> {
-      await removeUpload(video.videoUrl);
-      await removeUpload(video.thumbnailUrl);
-    })
-  ])
+    removeUpload(avatarPath),
+    ...videos.map(async (video) =>
+      Promise.all([
+        removeUpload(video.videoUrl),
+        removeUpload(video.thumbnailUrl),
+      ]),
+    ),
+  ]);
 
   res.status(200).json({ message: "Account deleted" });
 };
