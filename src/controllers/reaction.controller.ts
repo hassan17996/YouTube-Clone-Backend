@@ -11,7 +11,7 @@ type ReactionType = "like" | "dislike";
 const getCounts = async (videoId: number) => {
   const [likesCount, dislikesCount] = await Promise.all([
     Reaction.count({ where: { type: "like", videoId } }),
-    Reaction.count({ where: { type: "like", videoId } }),
+    Reaction.count({ where: { type: "dislike", videoId } }),
   ]);
   return { likesCount, dislikesCount };
 };
@@ -32,7 +32,7 @@ export const reactToVideo = async (req: Request, res: Response) => {
       if (!video) throw new HttpError(404, "Video not found");
 
       const existingReaction = await Reaction.findOne({
-        where: { videoId, type, userId: req.user!.id },
+        where: { videoId, userId: req.user!.id },
         transaction: t,
       });
 
