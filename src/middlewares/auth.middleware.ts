@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import { HttpError } from "../utils/httpError.js";
 import { User } from "../models/user.model.js";
+import { env } from "../config/env.js";
 
 // Verify Jwt Token 
 // Add user Into Request
@@ -20,7 +21,7 @@ export const authenticate = async (
   try {
     token = jwt.verify(
       authHeader.slice(7),
-      process.env.JWT_SECRET!,
+      env.jwtSecret,
     ) as JwtPayload;
   } catch {
     throw new HttpError(401, "Invalid or expired token");

@@ -41,6 +41,7 @@ export const consumeOtp = async (
     where: { email, type },
     order: [["id", "DESC"]],
     transaction: t,
+    lock: t.LOCK.UPDATE
   });
 
   if (!record || record.expiresAt < new Date()) {
