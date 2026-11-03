@@ -13,7 +13,7 @@ A RESTful backend for a YouTube-style video sharing platform.
 - **Subscriptions:** subscribe, unsubscribe, list, subscribed-channels feed
 - **Search:** videos by title or description, channels by username, with pagination, sorting and filters
 - **Profile:** update username, bio and avatar; delete account
-- **Security:** verified-only write actions, input validation and sanitization, rate limiting, Helmet, secrets in environment variables
+- **Security:** verified-only write actions, input validation and sanitization, Helmet, secrets in environment variables
 - **Transactions:** Sequelize transactions on signup, verification, password reset, video upload and update/delete, comments, reactions and subscriptions
 
 ## Requirements
@@ -59,9 +59,7 @@ See `.env.example` for the full list.
 | `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_PORT` | PostgreSQL connection                                                 |
 | `JWT_SECRET`                                                                            | At least 32 random characters. The server refuses to start without it |
 | `JWT_EXPIRES_IN`                                                                        | Token lifetime, e.g. `7d`                                             |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`                         | Email settings for OTPs                                               |
-| `CORS_ORIGIN`                                                                           | Comma-separated allowed origins                                       |
-| `TRUST_PROXY`                                                                           | `true` only behind a reverse proxy                                    |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`                         | Email settings for OTPs                
 
 ## Scripts
 
@@ -84,7 +82,7 @@ migrations/              Sequelize migrations (.cjs)
 src/
   app.ts                 Express app and startup
   controllers/           Request handlers
-  middlewares/           auth, validation, uploads, rate limiters
+  middlewares/           auth, validation, uploads 
   models/                Sequelize models and associations
   routes/                Route definitions
   types/                 Express type extensions
@@ -103,7 +101,7 @@ All POST, PUT and DELETE routes (except the public auth routes) require a valid 
 
 ## API overview
 
-Full examples are in the Postman collection (`YouTube-Clone-Backend.postman_collection.json`). Import it, run **Auth > Login** first, and the token is saved automatically.
+Full examples are in the Postman collection (`PostmanApiDoc.txt`).
 
 | Area          | Endpoints                                                                                                                                                               |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -139,7 +137,7 @@ Tables: `users`, `videos`, `comments`, `reactions`, `subscriptions`, `otps`. For
 ## Design decisions and limitations
 
 - A single JWT is used for sessions (no refresh tokens). Tokens stay valid until they expire, and logout is client-side.
-- OTPs are bcrypt-hashed, single use, and rate limited per email.
+- OTPs are bcrypt-hashed, single use.
 - MIME types are checked from the request header, not the file's real bytes.
 - Every video GET counts as a view, with no per-user deduplication.
 - Unverified accounts are not cleaned up automatically.
