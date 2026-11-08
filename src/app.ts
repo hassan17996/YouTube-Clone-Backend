@@ -6,8 +6,7 @@ import express from "express";
 import type { Request, Response, NextFunction } from "express";
 
 import cors from "cors";
-import * as helmetPkg from "helmet";
-const helmet = helmetPkg.default;
+import helmet from "helmet";
 import { connectDB } from "./utils/db.js";
 
 import authRoutes from "./routes/auth.routes.js";
@@ -39,7 +38,6 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/search", searchRoutes);
 
-
 // 404 handler
 app.use((req: Request, res: Response) => {
   res.status(404).json({ message: "Route not found" });
@@ -50,16 +48,23 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   console.log(error);
 
   if (error instanceof multer.MulterError) {
-    res.status(400).json({ message: error.code === "LIMIT_FILE_SIZE" ? "File too large" : error.message});
+    res
+      .status(400)
+      .json({
+        message:
+          error.code === "LIMIT_FILE_SIZE" ? "File too large" : error.message,
+      });
     return;
   }
 
   if (error instanceof HttpError) {
-    res.status(error.statusCode || 500).json({ message: error.message || "Internal Server Error"});
+    res
+      .status(error.statusCode || 500)
+      .json({ message: error.message || "Internal Server Error" });
     return;
   }
 
-  res.status(500).json({ message: "Internal Server Error"});
+  res.status(500).json({ message: "Internal Server Error" });
 });
 
 const PORT = process.env.APP_PORT || 3000;
